@@ -14,6 +14,16 @@ const plugin = {};
 plugin.init = async (params) => {
 	const { router /* , middleware , controllers */ } = params;
 
+	
+	router.get('/service-worker.js', (req, res) => {
+		console.log('overrides core route so we serve our own file')
+		const path = require('path');
+		res.status(200)
+			.type('application/javascript')
+			.set('Service-Worker-Allowed', `${nconf.get('relative_path')}/`)
+			.sendFile(path.join(__dirname, 'public/my-service-worker.js'));
+	});
+
 	// Settings saved in the plugin settings can be retrieved via settings methods
 	const { setting1, setting2 } = await meta.settings.get('quickstart');
 	if (setting1) {
