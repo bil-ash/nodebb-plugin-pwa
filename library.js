@@ -24,6 +24,15 @@ plugin.init = async (params) => {
 			.sendFile(path.join(__dirname, 'public/my-service-worker.js'));
 	});
 
+	router.get('/manifest.webmanifest', (req, res) => {
+		console.log('overrides core route so we serve our own file')
+		const path = require('path');
+		res.status(200)
+			.type('application/json')
+			//.set('Service-Worker-Allowed', `${nconf.get('relative_path')}/`)
+			.sendFile(path.join(__dirname, 'public/my-manifest.webmanifest'));
+	});
+	
 	// Settings saved in the plugin settings can be retrieved via settings methods
 	const { setting1, setting2 } = await meta.settings.get('quickstart');
 	if (setting1) {
