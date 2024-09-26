@@ -35,11 +35,14 @@ self.addEventListener('fetch', function (fetchEvent) {
         const keys = await caches.keys();
         const mediaCache = await caches.open(keys.filter((key) => key.startsWith('media'))[0]);
         await mediaCache.put('shared-image', new Response(image));
-        return Response.redirect('./?share-target', 303);
+        return Response.redirect('./compose?cid=2&share-target=1', 303);
       })(),
     );
 		
   }
+	else if (fetchEvent.request.method==='GET'){
+		return fetch(fetchEvent.request);
+	}
 
 	
 });
