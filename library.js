@@ -16,7 +16,7 @@ plugin.init = async (params) => {
 
 	
 	router.get('/service-worker.js', (req, res) => {
-		console.log('overrides core route so we serve our own file')
+		console.warn('overrides core route so we serve our own file,seems to be not working')
 		const path = require('path');
 		res.status(200)
 			.type('application/javascript')
