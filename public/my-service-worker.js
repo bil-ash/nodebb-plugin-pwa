@@ -41,7 +41,7 @@ self.addEventListener('fetch', function (fetchEvent) {
 		
   }
 	else if (fetchEvent.request.method==='GET'){
-		return fetch(fetchEvent.request);
+		return fetchEvent.respondWith((fetchEvent.request));
 	}
 
 	
