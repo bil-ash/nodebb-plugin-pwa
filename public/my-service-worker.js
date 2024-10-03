@@ -37,12 +37,21 @@ self.addEventListener('fetch', function (fetchEvent) {
         await mediaCache.put('shared-image', new Response(image));
         return Response.redirect('./compose?cid=2&share-target=1', 303);
       })(),
-    );
-		
+    );		
   }
-	else if (fetchEvent.request.method==='GET'){
-		return fetchEvent.respondWith(fetchEvent.request);
+
+	if (fetchEvent.request.method === 'POST') {
+		return;
 	}
+
+	
+	fetchEvent.respondWith(caches.match(fetchEvent.request).then(function (response) {
+		if (!response) {
+			return fetch(fetchEvent.request);
+		}
+
+		return response;
+	}));
 
 	
 });
