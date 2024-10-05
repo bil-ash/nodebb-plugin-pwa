@@ -1,5 +1,36 @@
 'use strict';
 
+const CACHE='nbbcache';
+const precacheFiles=[];
+//const offlineFallbackPage = "ToDo-replace-this-name.html"; won't require but lets keep
+
+const networkFirstPaths = [
+  /* Add an array of regex of paths that should go network first */
+  // Example: /\/api\/.*/
+];
+
+const avoidCachingPaths = [
+  /* Add an array of regex of paths that shouldn't be cached */
+  // Example: /\/api\/.*/
+];
+
+function pathComparer(requestUrl, pathRegEx) {
+  return requestUrl.match(new RegExp(pathRegEx));
+}
+
+function comparePaths(requestUrl, pathsArray) {
+  if (requestUrl) {
+    for (let index = 0; index < pathsArray.length; index++) {
+      const pathRegEx = pathsArray[index];
+      if (pathComparer(requestUrl, pathRegEx)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 self.addEventListener('install', () => {
 	// Register self as the primary service worker
 	self.skipWaiting();
