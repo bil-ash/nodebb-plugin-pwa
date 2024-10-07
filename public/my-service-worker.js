@@ -4,12 +4,11 @@ const CACHE='nbbcache';
 const precacheFiles=[];
 //const offlineFallbackPage = "ToDo-replace-this-name.html"; won't require but lets keep
 
-const networkFirstPaths = [
-  /* Add an array of regex of paths that should go network first */
+const networkFirstPaths = [/\/api\/v3\/chats.*/,/\/api\/chats\/.*/,/\/api\/user\/.*/
   // Example: /\/api\/.*/
 ];
 
-const avoidCachingPaths = [
+const avoidCachingPaths = [/\/socket.io\/.*/,/\/api\/v3\/.*/,/\/api\/.*/
   /* Add an array of regex of paths that shouldn't be cached */
   // Example: /\/api\/.*/
 ];
@@ -71,18 +70,13 @@ self.addEventListener('fetch', function (fetchEvent) {
     );		
   }
 
-	if (fetchEvent.request.method === 'POST') {
-		return;
-	}
+	if (fetchEvent.request.method !== "GET") return;
 
-	
-	fetchEvent.respondWith(caches.match(fetchEvent.request).then(function (response) {
-		if (!response) {
-			return fetch(fetchEvent.request);
-		}
-
-		return response;
-	}));
+  if (comparePaths(fetchEvent.request.url, networkFirstPaths)) {
+    networkFirstFetch(fetchEvent);
+  } else {
+    cacheFirstFetch(fetchEvent);
+  }
 
 	
 });
@@ -214,7 +208,11 @@ function fromCache(request) {
 }
 
 function updateCache(request, response) {
-  return caches.open(CACHE).then(function (cache) {
-    return cache.put(request, response);
-  });
+  if (!comparePaths(request.url, avoidCachingPaths)) {
+    return caches.open(CACHE).then(function (cache) {
+      return cache.put(request, response);
+    });
+  }
+
+  return Promise.resolve();
 }
