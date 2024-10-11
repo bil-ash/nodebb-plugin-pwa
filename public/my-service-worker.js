@@ -4,11 +4,12 @@ const CACHE='nbbcache';
 const precacheFiles=[];
 //const offlineFallbackPage = "ToDo-replace-this-name.html"; won't require but lets keep
 
-const networkFirstPaths = [/\/api\/v3\/chats.*/,/\/api\/chats\/.*/,/\/api\/user\/.*/
+const networkFirstPaths = [/\/api\/.*/
+  // old:  /\/api\/v3\/chats.*/,/\/api\/chats\/.*/,/\/api\/user\/.*/
   // Example: /\/api\/.*/
 ];
 
-const avoidCachingPaths = [/\/socket.io\/.*/,/\/api\/v3\/.*/,/\/api\/.*/
+const avoidCachingPaths = [/\/socket.io\/.*/,/\/assets\/uploads\/files\/.*/
   /* Add an array of regex of paths that shouldn't be cached */
   // Example: /\/api\/.*/
 ];
