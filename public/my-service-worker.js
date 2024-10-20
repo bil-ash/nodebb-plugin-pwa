@@ -72,13 +72,20 @@ self.addEventListener('fetch', function (fetchEvent) {
   }
 
 	if (fetchEvent.request.method !== "GET") return;
-
+/*
   if (comparePaths(fetchEvent.request.url, networkFirstPaths)) {
     networkFirstFetch(fetchEvent);
   } else {
     cacheFirstFetch(fetchEvent);
   }
+*/
+fetchEvent.respondWith(caches.match(fetchEvent.request).then(function (response) {
+  if (!response) {
+    return fetch(fetchEvent.request);
+  }
 
+  return response;
+}));
 	
 });
 
