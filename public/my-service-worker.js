@@ -1,6 +1,7 @@
 'use strict';
 
 const CACHE='nbbcache';
+const icache='nbimg';
 const precacheFiles=[];
 //const offlineFallbackPage = "ToDo-replace-this-name.html"; won't require but lets keep
 
@@ -64,7 +65,7 @@ self.addEventListener('fetch', function (fetchEvent) {
         const formData = await fetchEvent.request.formData();
         const image = formData.get('image');
         const keys = await caches.keys();
-        const mediaCache = await caches.open(keys.filter((key) => key.startsWith('media'))[0]);
+        const mediaCache = await caches.open(icache);
         await mediaCache.put('shared-image', new Response(image));
         return Response.redirect('./compose?cid=2&share-target=1', 303);
       })(),
