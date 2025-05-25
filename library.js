@@ -15,26 +15,35 @@ plugin.init = async (params) => {
 	const { router /* , middleware , controllers */ } = params;
 
 	
-	router.get('/service-worker.js', (req, res) => {
+	/*router.get('/service-worker.js', (req, res) => {
 		console.warn('overrides core route so we serve our own file,seems to be not working')
 		const path = require('path');
 		res.status(200)
 			.type('application/javascript')
 			.set('Service-Worker-Allowed', `${nconf.get('relative_path')}/`)
 			.sendFile(path.join(__dirname, 'public/my-service-worker.js'));
-	});
+	});*/
 
-	router.get('/manifest.webmanifest', (req, res) => {
+	/*router.get('/manifest.webmanifest', (req, res) => {
 		console.log('overrides core route so we serve our own file')
 		const path = require('path');
 		res.status(200)
 			.type('application/json')
 			//.set('Service-Worker-Allowed', `${nconf.get('relative_path')}/`)
 			.sendFile(path.join(__dirname, 'public/my-manifest.webmanifest'));
-	});
+	});*/
+
+	router.get('/.well-know/assetlinks.json', (req, res) => {
+		console.log('overrides core route so we serve our own file')
+		const path = require('path');
+		res.status(200)
+			.type('application/json')
+			//.set('Service-Worker-Allowed', `${nconf.get('relative_path')}/`)
+			.sendFile(path.join(__dirname, 'public/assetlinks.json'));
+	})
 	
 	// Settings saved in the plugin settings can be retrieved via settings methods
-	const { setting1, setting2 } = await meta.settings.get('quickstart');
+	const { setting1, setting2 } = await meta.settings.get('pwa');
 	if (setting1) {
 		console.log(setting2);
 	}
@@ -45,15 +54,15 @@ plugin.init = async (params) => {
 	 *
 	 * Other helpers include `setupAdminPageRoute` and `setupAPIRoute`
 	 * */
-	routeHelpers.setupPageRoute(router, '/quickstart', [(req, res, next) => {
-		winston.info(`[plugins/quickstart] In middleware. This argument can be either a single middleware or an array of middlewares`);
+	routeHelpers.setupPageRoute(router, '/pwa', [(req, res, next) => {
+		winston.info(`[plugins/pwa] In middleware. This argument can be either a single middleware or an array of middlewares`);
 		setImmediate(next);
 	}], (req, res) => {
-		winston.info(`[plugins/quickstart] Navigated to ${nconf.get('relative_path')}/quickstart`);
-		res.render('quickstart', { uid: req.uid });
+		winston.info(`[plugins/pwa] Navigated to ${nconf.get('relative_path')}/pwa`);
+		res.render('pwa', { uid: req.uid });
 	});
 
-	routeHelpers.setupAdminPageRoute(router, '/admin/plugins/quickstart', controllers.renderAdminPage);
+	routeHelpers.setupAdminPageRoute(router, '/admin/plugins/pwa', controllers.renderAdminPage);
 };
 
 /**
@@ -67,7 +76,7 @@ plugin.init = async (params) => {
  *
  * To call this example route:
  *   curl -X GET \
- * 		http://example.org/api/v3/plugins/quickstart/test \
+ * 		http://example.org/api/v3/plugins/pwa/test \
  * 		-H "Authorization: Bearer some_valid_bearer_token"
  *
  * Will yield the following response JSON:
@@ -87,7 +96,7 @@ plugin.addRoutes = async ({ router, middleware, helpers }) => {
 		// middleware.admin.checkPrivileges,	// use this to restrict the route to administrators
 	];
 
-	routeHelpers.setupApiRoute(router, 'get', '/quickstart/:param1', middlewares, (req, res) => {
+	routeHelpers.setupApiRoute(router, 'get', '/pwa/:param1', middlewares, (req, res) => {
 		helpers.formatApiResponse(200, res, {
 			foobar: req.params.param1,
 		});
@@ -96,9 +105,9 @@ plugin.addRoutes = async ({ router, middleware, helpers }) => {
 
 plugin.addAdminNavigation = (header) => {
 	header.plugins.push({
-		route: '/plugins/quickstart',
+		route: '/plugins/pwa',
 		icon: 'fa-tint',
-		name: 'Quickstart',
+		name: 'PWA',
 	});
 
 	return header;
