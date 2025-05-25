@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.b4htech.ekk",
+        "sha256_cert_fingerprints": ["1A:E6:FD:46:CB:72:7C:3B:C4:A9:63:9A:CC:82:23:78:20:59:57:39:DE:44:50:93:B5:87:B6:DB:7B:97:E1:E8"]
+      }
+    }]
